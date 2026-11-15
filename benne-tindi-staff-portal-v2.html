@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+<meta charset="UTF-8">
+<meta name="color-scheme" content="light dark">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Benne Tindi – Staff Portal</title>
+<script>
+  try { var t = localStorage.getItem("benne-tindi-theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: light;
+  /* Calm palette: soft sage accent, warm-grey neutrals, low-saturation status tints */
+  --accent: #5B8A72; --accent-hover: #4E7A64; --accent-ink: #FFFFFF; --accent-soft: #E4EFE8;
+  --bg: #F5F6F4; --surface: #FFFFFF; --ink: #2F3A3E; --muted: #6B767C; --faint: #A3ACB0; --line: #E2E6E3; --hover: #F0F3F1;
+  --nav-bg: #EBEFEC; --nav-ink: #3C4A4E; --nav-active: #FFFFFF;
+  --green: #3F7A5C; --green-soft: #E2EEE6; --red: #A4504A; --red-soft: #F4E4E2; --flag: #C9A65A; --flag-soft: #FAF4E6; --flag-ink: #7D6326;
+  /* status chips: tint background + dark text */
+  --s-present-bg: #D8EADF; --s-present-fg: #2C5C43; --s-present-bd: #B5D4C1;
+  --s-absent-bg: #F2DEDB; --s-absent-fg: #8A3E37; --s-absent-bd: #E3C2BD;
+  --s-half-bg: #F3EAD3; --s-half-fg: #77602A; --s-half-bd: #E2D2A8;
+  --s-pl-bg: #DCE6F0; --s-pl-fg: #31506D; --s-pl-bd: #BCCDDE;
+  --s-ul-bg: #E7E2EE; --s-ul-fg: #5A4A70; --s-ul-bd: #D0C7DD;
+  --s-wo-bg: #E8ECEA; --s-wo-fg: #4F5B56; --s-wo-bd: #D2D9D5;
+  --s-hol-bg: #DCEDEC; --s-hol-fg: #2F5F5D; --s-hol-bd: #BAD9D7;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --accent: #7FAE95; --accent-hover: #8FBCA3; --accent-ink: #18201C; --accent-soft: #263630;
+    --bg: #1E2325; --surface: #252B2E; --ink: #D7DDDA; --muted: #9AA5A9; --faint: #6E787C; --line: #343C3F; --hover: #2B3235;
+    --nav-bg: #22292B; --nav-ink: #C9D1CD; --nav-active: #2E3639;
+    --green: #8CC2A3; --green-soft: #26372E; --red: #D79A93; --red-soft: #3D2B29; --flag: #B89A55; --flag-soft: #322D22; --flag-ink: #D9C08A;
+    --s-present-bg: #2A3E33; --s-present-fg: #A8D3B9; --s-present-bd: #36503F;
+    --s-absent-bg: #432F2D; --s-absent-fg: #E3AFA8; --s-absent-bd: #573C39;
+    --s-half-bg: #3D3626; --s-half-fg: #DCC694; --s-half-bd: #514731;
+    --s-pl-bg: #2B3846; --s-pl-fg: #AFC6DD; --s-pl-bd: #394A5B;
+    --s-ul-bg: #352F40; --s-ul-fg: #C9BCDB; --s-ul-bd: #463D54;
+    --s-wo-bg: #2F3634; --s-wo-fg: #BAC4BF; --s-wo-bd: #3D4643;
+    --s-hol-bg: #263B3A; --s-hol-fg: #A6D3D0; --s-hol-bd: #334E4C;
+  }
+}
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --accent: #7FAE95; --accent-hover: #8FBCA3; --accent-ink: #18201C; --accent-soft: #263630;
+    --bg: #1E2325; --surface: #252B2E; --ink: #D7DDDA; --muted: #9AA5A9; --faint: #6E787C; --line: #343C3F; --hover: #2B3235;
+    --nav-bg: #22292B; --nav-ink: #C9D1CD; --nav-active: #2E3639;
+    --green: #8CC2A3; --green-soft: #26372E; --red: #D79A93; --red-soft: #3D2B29; --flag: #B89A55; --flag-soft: #322D22; --flag-ink: #D9C08A;
+    --s-present-bg: #2A3E33; --s-present-fg: #A8D3B9; --s-present-bd: #36503F;
+    --s-absent-bg: #432F2D; --s-absent-fg: #E3AFA8; --s-absent-bd: #573C39;
+    --s-half-bg: #3D3626; --s-half-fg: #DCC694; --s-half-bd: #514731;
+    --s-pl-bg: #2B3846; --s-pl-fg: #AFC6DD; --s-pl-bd: #394A5B;
+    --s-ul-bg: #352F40; --s-ul-fg: #C9BCDB; --s-ul-bd: #463D54;
+    --s-wo-bg: #2F3634; --s-wo-fg: #BAC4BF; --s-wo-bd: #3D4643;
+    --s-hol-bg: #263B3A; --s-hol-fg: #A6D3D0; --s-hol-bd: #334E4C;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--bg); color: var(--ink); font-size: 15px; line-height: 1.45; -webkit-font-smoothing: antialiased; }
+.num { font-variant-numeric: tabular-nums; }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Layout */
+.app { display: grid; grid-template-columns: 232px 1fr; min-height: 100vh; }
+nav.side { background: var(--nav-bg); color: var(--nav-ink); border-right: 1px solid var(--line); padding: 24px 12px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; }
+.brand { display: flex; gap: 12px; align-items: center; padding: 0 8px 24px; }
+.logo { width: 36px; height: 36px; border-radius: 9px; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font-weight: 700; }
+.brand b { display: block; font-size: 15px; }
+.brand small { opacity: .65; font-size: 12px; }
+.side button.tab { display: block; width: 100%; text-align: left; background: none; border: 0; color: var(--nav-ink); opacity: .85; padding: 9px 12px; border-radius: 8px; cursor: pointer; font-size: 14px; }
+.side button.tab:hover { opacity: 1; background: var(--hover); }
+.side button.tab[aria-current="page"] { opacity: 1; background: var(--nav-active); font-weight: 600; box-shadow: inset 3px 0 0 var(--accent), 0 1px 2px rgba(47,58,62,.06); }
+.theme-btn { display: flex; align-items: center; gap: 10px; width: 100%; margin-top: auto; margin-bottom: 10px; padding: 9px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--nav-ink); cursor: pointer; font-size: 14px; }
+.theme-btn:hover { background: var(--hover); }
+.switch { margin-left: auto; width: 34px; height: 20px; border-radius: 99px; background: var(--line); position: relative; flex: none; transition: background .15s; }
+.switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: var(--surface); box-shadow: 0 1px 2px rgba(0,0,0,.25); transition: transform .15s; }
+.theme-btn[aria-checked="true"] .switch { background: var(--accent); }
+.theme-btn[aria-checked="true"] .switch::after { transform: translateX(14px); }
+.saved { font-size: 12px; opacity: .7; padding: 12px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line); }
+.saved .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); margin-right: 6px; }
+main { padding: 36px 40px 60px; max-width: 1240px; width: 100%; }
+.topbar { display: none; }
+
+h1 { font-size: 26px; letter-spacing: -0.015em; margin: 0; font-weight: 600; }
+.sub { color: var(--muted); font-size: 14px; margin: 4px 0 0; }
+.head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+/* Surfaces */
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 1px 2px rgba(47,58,62,.04); overflow: hidden; }
+.card + .card, .band + .card, .grid2 { margin-top: 20px; }
+.card-h { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.card-h h2 { font-size: 15px; margin: 0; font-weight: 600; }
+.pad { padding: 18px; }
+.grid2 { display: grid; grid-template-columns: 340px 1fr; gap: 20px; align-items: start; }
+.band { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.band > div { padding: 14px 18px; border-right: 1px solid var(--line); }
+.band > div:last-child { border-right: 0; }
+.band small { color: var(--muted); font-size: 12.5px; }
+.band b { display: block; font-size: 22px; font-weight: 600; margin-top: 2px; letter-spacing: -0.01em; }
+
+/* Forms */
+label.f { display: grid; gap: 5px; font-size: 13px; font-weight: 500; }
+input, select { height: 40px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); padding: 0 11px; width: 100%; }
+input:focus, select:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 3px var(--accent-soft); }
+.form { display: grid; gap: 12px; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.btn { height: 38px; padding: 0 15px; border-radius: 8px; border: 1px solid transparent; background: var(--accent); color: var(--accent-ink); font-weight: 500; cursor: pointer; font-size: 14px; white-space: nowrap; }
+.btn:hover { background: var(--accent-hover); }
+.btn.out { background: var(--surface); color: var(--ink); border-color: var(--line); }
+.btn.out:hover { background: var(--hover); }
+.btn.ghost { background: none; color: var(--ink); border: 0; padding: 0 8px; height: 30px; }
+.btn.ghost:hover { background: var(--hover); }
+.btn.danger { color: var(--red); }
+.btn.sm { height: 30px; padding: 0 10px; font-size: 13px; }
+
+.check { display: flex; gap: 8px; align-items: center; font-size: 14px; }
+.check input { width: 16px; height: 16px; accent-color: var(--accent); }
+
+/* Tables */
+.tbl { width: 100%; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: left; font-size: 12px; font-weight: 500; color: var(--muted); padding: 10px 14px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 11px 14px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+tbody tr:hover { background: var(--hover); }
+.r { text-align: right; }
+.muted { color: var(--muted); }
+.small { font-size: 12px; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 12px; font-weight: 500; background: var(--hover); color: var(--muted); }
+.badge.ok { background: var(--green-soft); color: var(--green); }
+.badge.bad { background: var(--red-soft); color: var(--red); }
+.badge.warn { background: var(--flag-soft); color: var(--flag-ink); }
+.empty { padding: 44px 20px; text-align: center; color: var(--muted); }
+.empty b { display: block; color: var(--ink); margin-bottom: 4px; }
+
+/* Attendance — the most-used screen */
+.att-row { display: grid; grid-template-columns: minmax(170px,1.2fr) 100px 100px minmax(0,2.8fr); gap: 12px; align-items: center; padding: 12px 18px; border-bottom: 1px solid var(--line); border-left: 3px solid transparent; }
+.att-row:last-child { border-bottom: 0; }
+.att-row.unmarked { border-left-color: var(--flag); background: var(--flag-soft); }
+.att-row .nm b { font-weight: 600; }
+.att-row .nm small { display: block; color: var(--muted); font-size: 12px; }
+.att-row .nm .nmk { color: var(--flag-ink); font-weight: 500; font-size: 11.5px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
+.chip { height: 34px; min-width: 42px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--muted); font-size: 13px; font-weight: 600; cursor: pointer; }
+.chip:hover { color: var(--ink); }
+.chip[aria-checked="true"].present { background: var(--s-present-bg); border-color: var(--s-present-bd); color: var(--s-present-fg); }
+.chip[aria-checked="true"].absent { background: var(--s-absent-bg); border-color: var(--s-absent-bd); color: var(--s-absent-fg); }
+.chip[aria-checked="true"].half_day { background: var(--s-half-bg); border-color: var(--s-half-bd); color: var(--s-half-fg); }
+.chip[aria-checked="true"].paid_leave { background: var(--s-pl-bg); border-color: var(--s-pl-bd); color: var(--s-pl-fg); }
+.chip[aria-checked="true"].unpaid_leave { background: var(--s-ul-bg); border-color: var(--s-ul-bd); color: var(--s-ul-fg); }
+.chip[aria-checked="true"].weekly_off { background: var(--s-wo-bg); border-color: var(--s-wo-bd); color: var(--s-wo-fg); }
+.chip[aria-checked="true"].holiday { background: var(--s-hol-bg); border-color: var(--s-hol-bd); color: var(--s-hol-fg); }
+.chip[aria-checked="true"]::before { content: "✓ "; font-weight: 700; }
+.bulk { display: flex; gap: 8px; padding: 10px 18px; background: var(--bg); border-bottom: 1px solid var(--line); flex-wrap: wrap; align-items: center; }
+
+/* Payslip / dialogs */
+dialog { border: 1px solid var(--line); border-radius: 14px; padding: 0; background: var(--surface); color: var(--ink); max-width: 560px; width: calc(100vw - 32px); box-shadow: 0 20px 50px -12px rgba(30,40,44,.25); }
+dialog::backdrop { background: rgba(30,40,44,.35); }
+.dlg-h { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--line); }
+.dlg-h h3 { margin: 0; font-size: 16px; }
+.dlg-b { padding: 20px; }
+.calc td { padding: 7px 0; border-bottom: 1px dashed var(--line); white-space: normal; }
+.calc td:last-child { text-align: right; }
+.calc .tot td { border-bottom: 0; border-top: 2px solid var(--accent); font-weight: 600; font-size: 17px; padding-top: 10px; }
+.warnbox { background: var(--flag-soft); color: var(--flag-ink); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; font-size: 13px; margin-bottom: 14px; }
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: 10px; font-size: 14px; opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 50; }
+.toast.show { opacity: 1; }
+
+@media (max-width: 1000px) {
+  .grid2 { grid-template-columns: 1fr; }
+  .band { grid-auto-flow: row; grid-template-columns: 1fr 1fr; }
+  .band > div { border-bottom: 1px solid var(--line); }
+  .att-row { grid-template-columns: 1fr; }
+  .att-row .money { display: none; }
+  .chips { justify-content: flex-start; }
+}
+@media (max-width: 760px) {
+  .app { grid-template-columns: 1fr; }
+  nav.side { position: fixed; z-index: 40; width: 250px; transform: translateX(-100%); transition: transform .2s; }
+  nav.side.open { transform: none; }
+  .topbar { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--bg); z-index: 30; }
+  main { padding: 20px 16px 60px; }
+  .row2 { grid-template-columns: 1fr; }
+}
+@media print {
+  nav.side, .topbar, .head .actions, .no-print { display: none !important; }
+  .app { display: block; } main { padding: 0; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <nav class="side" id="side" aria-label="Main">
+    <div class="brand"><div class="logo" aria-hidden="true">ಬ</div><div><b id="bizName">Benne Tindi</b><small>Staff portal</small></div></div>
+    <div id="tabs"></div>
+    <button class="theme-btn" id="themeBtn" role="switch" aria-checked="false"><span id="themeIcon" aria-hidden="true">☾</span><span>Dark mode</span><span class="switch" aria-hidden="true"></span></button>
+    <div class="saved" id="savedBox" aria-live="polite"><span class="dot"></span><span id="savedText">Saved in this browser</span></div>
+  </nav>
+  <div>
+    <div class="topbar"><button class="btn out sm" id="menuBtn" aria-label="Open menu">☰</button><b>Benne Tindi</b><button class="btn out sm" id="themeBtnTop" style="margin-left:auto" aria-label="Switch light or dark mode">☾</button></div>
+    <main id="view"></main>
+  </div>
+</div>
+<dialog id="dlg"></dialog>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ============================================================
+   Storage — every change is saved to localStorage immediately.
+   Backups (JSON) can be downloaded and restored from the Data tab.
+   ============================================================ */
+const KEY = "benne-tindi-portal-v2"; // fresh, empty record store
+const STATUSES = {
+  present: ["Present", "P"], absent: ["Absent", "A"], half_day: ["Half day", "½"], paid_leave: ["Paid leave", "PL"],
+  unpaid_leave: ["Unpaid leave", "UL"], weekly_off: ["Weekly off", "WO"], holiday: ["Holiday", "H"],
+};
+const METHODS = { days_30: "30-day basis", days_26: "26-day basis", calendar: "Actual calendar days" };
+const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const MONTHS_LONG = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+let state, storageOk = true;
+
+function blankState() {
+  return {
+    version: 1, seq: 0,
+    settings: { business: "Benne Tindi", method: "days_30", weeklyOffPaid: true, holidayPaid: true, cap: true, halfDay: 0.5 },
+    employees: [], attendance: {}, advances: [], deductions: [], extras: [], payrolls: {},
+  };
+}
+
+
+function load() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    state = raw ? JSON.parse(raw) : blankState();
+    if (!raw) save(true);
+  } catch (e) {
+    storageOk = false;
+    state = blankState();
+  }
+  state = Object.assign(blankState(), state);
+}
+
+function save(silent) {
+  try {
+    localStorage.setItem(KEY, JSON.stringify(state));
+    storageOk = true;
+    const now = new Date();
+    document.getElementById("savedText").textContent = "Saved " + now.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+  } catch (e) {
+    storageOk = false;
+    document.getElementById("savedText").textContent = "Not saved — download a backup";
+    if (!silent) toast("Couldn't save in this browser. Download a backup from the Data tab.");
+  }
+}
+
+/* ============================================================
+   Helpers
+   ============================================================ */
+function uid() { return Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4); }
+function today() { return new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata" }).format(new Date()); }
+function addDays(iso, n) { const d = new Date(iso + "T00:00:00Z"); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
+function weekday(iso) { return new Date(iso + "T00:00:00Z").getUTCDay(); }
+function daysIn(ym) { const [y, m] = ym.split("-").map(Number); return new Date(Date.UTC(y, m, 0)).getUTCDate(); }
+function fmtDate(iso) { if (!iso) return "—"; const [y, m, d] = iso.split("-"); return `${d} ${MONTHS[+m - 1]} ${y}`; }
+function fmtMonth(ym) { const [y, m] = ym.split("-"); return `${MONTHS_LONG[+m - 1]} ${y}`; }
+function r2(n) { return Math.round((n + Number.EPSILON) * 100) / 100; }
+const inr = new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", minimumFractionDigits: 2 });
+const inr0 = new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 });
+function money(n, whole) { return (whole ? inr0 : inr).format(Number(n) || 0); }
+function esc(s) { return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+function emp(id) { return state.employees.find((e) => e.id === id); }
+function employedOn(e, d) { return e.joining <= d && (!e.exit || e.exit >= d); }
+function methodOf(e) { return e.method || state.settings.method; }
+function divisor(method, ym) { return method === "days_30" ? 30 : method === "days_26" ? 26 : daysIn(ym); }
+function dailyRate(e, ym) { return r2(e.salary / divisor(methodOf(e), ym)); }
+function toast(msg) { const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("show"), 2600); }
+function download(name, text, type) { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000); }
+
+/* ============================================================
+   Salary engine (same rules as the full Next.js version)
+   ============================================================ */
+function advanceOutstanding(adv, excludeYm) {
+  let rec = 0;
+  for (const [ym, p] of Object.entries(state.payrolls)) {
+    if (ym === excludeYm) continue;
+    for (const r of p.recoveries || []) if (r.advId === adv.id) rec += r.amount;
+  }
+  return adv.void ? 0 : r2(adv.amount - rec);
+}
+
+function calculate(e, ym) {
+  const days = daysIn(ym), method = methodOf(e), div = divisor(method, ym), s = state.settings;
+  const counts = { present: 0, absent: 0, half_day: 0, paid_leave: 0, unpaid_leave: 0, weekly_off: 0, holiday: 0, not_marked: 0 };
+  let employed = 0;
+  const end = `${ym}-${String(days).padStart(2, "0")}`;
+  for (let d = 1; d <= days; d++) {
+    const iso = `${ym}-${String(d).padStart(2, "0")}`;
+    if (!employedOn(e, iso)) continue;
+    employed++;
+    const st = state.attendance[iso]?.[e.id];
+    if (st) counts[st]++; else if (iso <= today()) counts.not_marked++;
+  }
+  const warnings = [];
+  // 26-day rate already covers weekly offs; paying them too would overpay.
+  const offPaid = method === "days_26" ? false : s.weeklyOffPaid;
+  const payable = counts.present + counts.half_day * s.halfDay + counts.paid_leave + (offPaid ? counts.weekly_off : 0) + (s.holidayPaid ? counts.holiday : 0);
+  const rate = r2(e.salary / div);
+  let gross = r2(e.salary * payable / div);
+  if (s.cap && gross > e.salary) { gross = e.salary; warnings.push("Capped at monthly salary."); }
+  if (counts.not_marked) warnings.push(`${counts.not_marked} day(s) not marked — not paid.`);
+  const sumIn = (list) => r2(list.filter((x) => x.empId === e.id && !x.void && x.date.startsWith(ym)).reduce((t, x) => t + Number(x.amount), 0));
+  const deductions = sumIn(state.deductions);
+  const overtime = sumIn(state.extras.filter((x) => x.kind === "Overtime"));
+  const bonus = sumIn(state.extras.filter((x) => x.kind === "Bonus"));
+  let available = r2(gross + overtime + bonus - deductions);
+  if (available < 0) { warnings.push(`Deductions exceed earnings by ${money(-available)}.`); available = 0; }
+  const recoveries = [];
+  state.advances.filter((a) => a.empId === e.id && !a.void && a.date <= end).sort((a, b) => a.date.localeCompare(b.date)).forEach((a) => {
+    const out = advanceOutstanding(a, ym);
+    const take = r2(Math.min(out, available));
+    if (take > 0) { recoveries.push({ advId: a.id, amount: take }); available = r2(available - take); }
+    if (out - take > 0) warnings.push(`${money(out - take)} advance carries forward.`);
+  });
+  const advances = r2(recoveries.reduce((t, r) => t + r.amount, 0));
+  return { empId: e.id, name: e.name, code: e.code, designation: e.designation, salary: e.salary, method, divisor: div, rate, days, employed, counts, payable, gross, overtime, bonus, deductions, advances, recoveries, net: available, warnings, offPaid, payments: [] };
+}
+
+function payrollFor(ym) {
+  const saved = state.payrolls[ym];
+  if (saved) return { finalized: true, items: Object.values(saved.items) };
+  const start = `${ym}-01`, end = `${ym}-${String(daysIn(ym)).padStart(2, "0")}`;
+  const items = state.employees.filter((e) => e.joining <= end && (!e.exit || e.exit >= start)).map((e) => calculate(e, ym));
+  return { finalized: false, items };
+}
+function paidOf(item) { return r2((item.payments || []).reduce((t, p) => t + p.amount, 0)); }
+
+/* ============================================================
+   Views
+   ============================================================ */
+const TABS = [["dashboard", "Dashboard"], ["attendance", "Attendance"], ["employees", "Employees"], ["payroll", "Payroll"], ["advances", "Advances"], ["deductions", "Deductions & extras"], ["data", "Data & backup"]];
+let current = "dashboard";
+const ui = { date: today(), month: today().slice(0, 7), payMonth: today().slice(0, 7), q: "", showInactive: false };
+
+function renderTabs() {
+  document.getElementById("tabs").innerHTML = TABS.map(([k, l]) => `<button class="tab" data-tab="${k}" ${k === current ? 'aria-current="page"' : ""}>${l}</button>`).join("");
+  document.getElementById("bizName").textContent = state.settings.business;
+}
+function go(tab) { current = tab; renderTabs(); render(); document.getElementById("side").classList.remove("open"); window.scrollTo(0, 0); }
+function render() { document.getElementById("view").innerHTML = VIEWS[current](); }
+
+const VIEWS = {
+  dashboard() {
+    const t = today();
+    const roll = state.employees.filter((e) => employedOn(e, t));
+    const day = state.attendance[t] || {};
+    const c = (st) => roll.filter((e) => st.includes(day[e.id])).length;
+    const unmarked = roll.filter((e) => !day[e.id]).length;
+    const monthly = state.employees.filter((e) => e.status === "active").reduce((s, e) => s + e.salary, 0);
+    let pending = 0;
+    Object.values(state.payrolls).forEach((p) => Object.values(p.items).forEach((i) => pending += i.net - paidOf(i)));
+    const outstandingAdv = state.advances.reduce((s, a) => s + advanceOutstanding(a), 0);
+    const h = Number(new Intl.DateTimeFormat("en-IN", { timeZone: "Asia/Kolkata", hour: "numeric", hour12: false }).format(new Date()));
+    return `
+      <div class="head"><div><h1>${h < 12 ? "Good morning" : h < 17 ? "Good afternoon" : "Good evening"}, Admin</h1><p class="sub">Here's your staff overview for today, ${fmtDate(t)}.</p></div>
+      <div class="actions"><button class="btn" data-tab="attendance">Mark attendance</button></div></div>
+      <div class="band">
+        <div><small>Total employees</small><b class="num">${roll.length}</b></div>
+        <div><small>Present today</small><b class="num" style="color:var(--green)">${c(["present"])}</b></div>
+        <div><small>Absent today</small><b class="num" style="color:${c(["absent"]) ? "var(--red)" : "inherit"}">${c(["absent"])}</b></div>
+        <div><small>On leave</small><b class="num">${c(["paid_leave", "unpaid_leave"])}</b></div>
+        <div><small>Half day</small><b class="num">${c(["half_day"])}</b></div>
+        <div><small>Not marked</small><b class="num" style="color:${unmarked ? "var(--flag-ink)" : "inherit"}">${unmarked}</b></div>
+        <div><small>Monthly payroll</small><b class="num">${money(monthly, true)}</b></div>
+        <div><small>Pending salary</small><b class="num">${money(pending, true)}</b></div>
+      </div>
+      <div class="card"><div class="card-h"><h2>Today's attendance</h2><span class="muted small">Outstanding advances: ${money(outstandingAdv)}</span></div>
+        ${roll.length ? `<div class="tbl"><table><thead><tr><th>Employee</th><th>Designation</th><th>Status</th><th class="r">Daily rate</th></tr></thead><tbody>
+        ${roll.map((e) => `<tr><td><b>${esc(e.name)}</b></td><td>${esc(e.designation)}</td><td>${day[e.id] ? `<span class="badge ${day[e.id] === "present" ? "ok" : day[e.id] === "absent" ? "bad" : ""}">${STATUSES[day[e.id]][0]}</span>` : `<span class="badge warn">Not marked</span>`}</td><td class="r num">${money(dailyRate(e, t.slice(0, 7)))}</td></tr>`).join("")}
+        </tbody></table></div>` : `<div class="empty"><b>No staff yet</b>Add your first employee to start marking attendance.<div style="margin-top:14px"><button class="btn" data-tab="employees">Add employee</button></div></div>`}
+      </div>`;
+  },
+
+  attendance() {
+    const d = ui.date, ym = d.slice(0, 7), locked = !!state.payrolls[ym];
+    const rows = state.employees.filter((e) => employedOn(e, d) && (!ui.q || e.name.toLowerCase().includes(ui.q.toLowerCase())));
+    const day = state.attendance[d] || {};
+    const unmarked = rows.filter((e) => !day[e.id]);
+    const offs = unmarked.filter((e) => e.weeklyOff === weekday(d));
+    return `
+      <div class="head"><div><h1>Attendance</h1><p class="sub">Tap a status for each person. Unmarked days are never counted as absent.</p></div></div>
+      ${locked ? `<div class="warnbox">${fmtMonth(ym)} payroll is finalized. Changes here won't affect it unless you unlock the month on the Payroll tab.</div>` : ""}
+      <div class="card">
+        <div class="card-h">
+          <div class="actions">
+            <button class="btn out sm" data-act="day" data-n="-1" aria-label="Previous day">‹</button>
+            <input type="date" id="attDate" value="${d}" style="width:160px" aria-label="Date">
+            <button class="btn out sm" data-act="day" data-n="1" aria-label="Next day">›</button>
+            ${d !== today() ? `<button class="btn ghost" data-act="today">Today</button>` : ""}
+            <span class="muted small"><b class="num" style="color:var(--ink)">${rows.length - unmarked.length}</b> of ${rows.length} marked</span>
+          </div>
+          <input type="search" id="attSearch" placeholder="Search staff" value="${esc(ui.q)}" style="width:190px" aria-label="Search staff">
+        </div>
+        ${unmarked.length ? `<div class="bulk">
+          ${offs.length ? `<button class="btn out sm" data-act="bulk" data-st="weekly_off" data-only="off">Apply weekly offs (${offs.length})</button>` : ""}
+          ${d <= today() ? `<button class="btn sm" data-act="bulk" data-st="present">Mark unmarked present (${unmarked.length})</button>` : ""}
+        </div>` : ""}
+        ${rows.length ? rows.map((e) => {
+          const st = day[e.id];
+          return `<div class="att-row ${st ? "" : "unmarked"}">
+            <div class="nm"><b>${esc(e.name)}</b> ${e.demo ? '<span class="badge">Demo</span>' : ""}<small>${esc(e.designation)} · ${e.code}${e.weeklyOff === weekday(d) ? " · Weekly off today" : ""}</small>${st ? "" : '<span class="nmk">Not marked</span>'}</div>
+            <div class="money r num">${money(e.salary, true)}<div class="small muted">monthly</div></div>
+            <div class="money r num">${money(dailyRate(e, ym))}<div class="small muted">per day</div></div>
+            <div class="chips" role="radiogroup" aria-label="Attendance for ${esc(e.name)}">
+              ${Object.entries(STATUSES).map(([k, [l]]) => `<button class="chip ${k}" role="radio" aria-checked="${st === k}" data-act="mark" data-emp="${e.id}" data-st="${k}">${l}</button>`).join("")}
+            </div>
+          </div>`;
+        }).join("") : `${state.employees.length ? `<div class="empty"><b>No staff on this date</b>Check joining dates on the Employees tab, or clear the search.</div>` : `<div class="empty"><b>No employees yet</b>Add staff on the Employees tab, then mark attendance here.<div style="margin-top:14px"><button class="btn" data-tab="employees">Add employee</button></div></div>`}`}
+      </div>`;
+  },
+
+  employees() {
+    const list = state.employees.filter((e) => ui.showInactive || e.status === "active");
+    return `
+      <div class="head"><div><h1>Employees</h1><p class="sub">Employees are deactivated, never deleted, so their history stays intact.</p></div></div>
+      <div class="grid2">
+        <div class="card"><div class="card-h"><h2 id="empFormTitle">Add employee</h2></div><div class="pad">
+          <form class="form" id="empForm">
+            <input type="hidden" name="id" value="">
+            <label class="f">Employee name<input name="name" required minlength="2"></label>
+            <div class="row2"><label class="f">Designation<input name="designation" required list="desigs"></label>
+            <label class="f">Mobile<input name="mobile" inputmode="numeric" pattern="[6-9][0-9]{9}" maxlength="10" title="10-digit Indian mobile number"></label></div>
+            <datalist id="desigs"><option>Head Chef</option><option>Dosa Maker</option><option>Cook</option><option>Helper</option><option>Waiter</option><option>Cashier</option><option>Cleaner</option></datalist>
+            <div class="row2"><label class="f">Joining date<input type="date" name="joining" required value="${today()}"></label>
+            <label class="f">Monthly salary (₹)<input type="number" name="salary" min="1" step="0.01" required></label></div>
+            <div class="row2"><label class="f">Salary method<select name="method"><option value="">Default (${METHODS[state.settings.method]})</option>${Object.entries(METHODS).map(([k, v]) => `<option value="${k}">${v}</option>`).join("")}</select></label>
+            <label class="f">Weekly off<select name="weeklyOff"><option value="">None</option>${["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"].map((d, i) => `<option value="${i}">${d}</option>`).join("")}</select></label></div>
+            <div class="actions"><button class="btn" type="submit">Save employee</button><button class="btn ghost" type="reset" data-act="empReset">Clear</button></div>
+          </form></div></div>
+        <div class="card"><div class="card-h"><h2>${list.length} employee${list.length === 1 ? "" : "s"}</h2><label class="check"><input type="checkbox" id="showInactive" ${ui.showInactive ? "checked" : ""}> Show inactive</label></div>
+          ${list.length ? `<div class="tbl"><table><thead><tr><th>ID</th><th>Name</th><th>Designation</th><th>Joined</th><th class="r">Salary</th><th>Status</th><th></th></tr></thead><tbody>
+          ${list.map((e) => `<tr><td class="muted num">${e.code}</td><td><b>${esc(e.name)}</b> ${e.demo ? '<span class="badge">Demo</span>' : ""}</td><td>${esc(e.designation)}</td><td>${fmtDate(e.joining)}</td><td class="r num">${money(e.salary)}</td>
+            <td>${e.status === "active" ? '<span class="badge ok">Active</span>' : `<span class="badge">Left ${fmtDate(e.exit)}</span>`}</td>
+            <td class="r"><button class="btn ghost sm" data-act="empEdit" data-id="${e.id}">Edit</button>${e.status === "active" ? `<button class="btn ghost sm danger" data-act="empDeact" data-id="${e.id}">Deactivate</button>` : `<button class="btn ghost sm" data-act="empReact" data-id="${e.id}">Reactivate</button>`}</td></tr>`).join("")}
+          </tbody></table></div>` : `<div class="empty"><b>No employees yet</b>Fill in the form to add your first employee. Their ID (BT-0001, BT-0002…) is assigned automatically.</div>`}
+        </div>
+      </div>`;
+  },
+
+  payroll() {
+    const ym = ui.payMonth, p = payrollFor(ym), items = p.items;
+    const sum = (k) => items.reduce((t, i) => t + i[k], 0);
+    const paid = items.reduce((t, i) => t + paidOf(i), 0);
+    return `
+      <div class="head"><div><h1>Payroll</h1><p class="sub">Live calculation from attendance. Finalize to lock the month, then record payments.</p></div>
+        <div class="actions"><input type="month" id="payMonth" value="${ym}" style="width:170px" aria-label="Payroll month">
+        ${items.length ? `<button class="btn out" data-act="payCsv">Export CSV</button>` : ""}
+        ${p.finalized ? `<button class="btn out" data-act="unlock">Unlock month</button>` : items.length ? `<button class="btn" data-act="finalize">Finalize ${MONTHS[+ym.slice(5) - 1]}</button>` : ""}</div></div>
+      <div class="band">
+        <div><small>Gross payroll</small><b class="num">${money(sum("gross") + sum("overtime") + sum("bonus"), true)}</b></div>
+        <div><small>Advances recovered</small><b class="num">${money(sum("advances"), true)}</b></div>
+        <div><small>Deductions</small><b class="num">${money(sum("deductions"), true)}</b></div>
+        <div><small>Paid</small><b class="num" style="color:var(--green)">${money(paid, true)}</b></div>
+        <div><small>Pending</small><b class="num">${money(sum("net") - paid, true)}</b></div>
+      </div>
+      <div class="card"><div class="card-h"><h2>${fmtMonth(ym)} ${p.finalized ? '<span class="badge ok">Finalized</span>' : '<span class="badge warn">Draft · live</span>'}</h2></div>
+        ${items.length ? `<div class="tbl"><table><thead><tr><th>Employee</th><th class="r">Present</th><th class="r">Absent</th><th class="r">Half day</th><th class="r">Unmarked</th><th class="r">Gross</th><th class="r">Advances</th><th class="r">Net salary</th><th>Payment</th><th></th></tr></thead><tbody>
+        ${items.map((i) => { const pd = paidOf(i); return `<tr>
+          <td><b>${esc(i.name)}</b><div class="small muted">${esc(i.designation)}</div></td>
+          <td class="r num">${i.counts.present}</td><td class="r num">${i.counts.absent}</td><td class="r num">${i.counts.half_day}</td>
+          <td class="r num" style="${i.counts.not_marked ? "color:var(--red);font-weight:600" : ""}">${i.counts.not_marked}</td>
+          <td class="r num">${money(i.gross)}</td><td class="r num">${money(i.advances)}</td><td class="r num"><b>${money(i.net)}</b></td>
+          <td>${!p.finalized ? '<span class="badge">Draft</span>' : i.net === 0 ? '<span class="badge">Nothing due</span>' : pd >= i.net ? '<span class="badge ok">Paid</span>' : pd > 0 ? `<span class="badge warn">${money(i.net - pd, true)} due</span>` : '<span class="badge bad">Unpaid</span>'}</td>
+          <td class="r"><button class="btn ghost sm" data-act="slip" data-emp="${i.empId}">Calculation</button>${p.finalized && pd < i.net ? `<button class="btn ghost sm" data-act="pay" data-emp="${i.empId}">Pay</button>` : ""}</td></tr>`; }).join("")}
+        </tbody></table></div>` : `<div class="empty"><b>No staff this month</b>${state.employees.length ? `Nobody was employed in ${fmtMonth(ym)}.` : "Add employees first. Payroll is calculated from their attendance."}</div>`}
+      </div>`;
+  },
+
+  advances() {
+    const list = [...state.advances].sort((a, b) => b.date.localeCompare(a.date));
+    return `
+      <div class="head"><div><h1>Advances</h1><p class="sub">Recovered automatically from salary, oldest first, when a month is finalized.</p></div></div>
+      <div class="grid2">
+        <div class="card"><div class="card-h"><h2>Record advance</h2></div><div class="pad">
+          <form class="form" id="advForm">
+            <label class="f">Employee${empSelect()}</label>
+            <div class="row2"><label class="f">Amount (₹)<input type="number" name="amount" min="1" step="0.01" required></label><label class="f">Date<input type="date" name="date" max="${today()}" value="${today()}" required></label></div>
+            <label class="f">Payment method<select name="method"><option>Cash</option><option>UPI</option><option>Bank transfer</option></select></label>
+            <label class="f">Reason (optional)<input name="note"></label>
+            <button class="btn" type="submit">Record advance</button>
+          </form></div></div>
+        <div class="card"><div class="card-h"><h2>Advance history</h2></div>
+          ${list.length ? `<div class="tbl"><table><thead><tr><th>Employee</th><th>Date</th><th class="r">Amount</th><th class="r">Outstanding</th><th>Method</th><th>Reason</th><th></th></tr></thead><tbody>
+          ${list.map((a) => { const out = advanceOutstanding(a); return `<tr style="${a.void ? "opacity:.55" : ""}"><td><b>${esc(emp(a.empId)?.name)}</b></td><td>${fmtDate(a.date)}</td><td class="r num">${money(a.amount)}</td>
+            <td class="r">${a.void ? '<span class="badge">Voided</span>' : out === 0 ? '<span class="badge ok">Repaid</span>' : `<span class="num">${money(out)}</span>`}</td><td>${esc(a.method)}</td><td class="muted">${esc(a.void ? "Voided: " + a.voidReason : a.note || "—")}</td>
+            <td class="r">${!a.void && out === a.amount ? `<button class="btn ghost sm danger" data-act="advVoid" data-id="${a.id}">Void</button>` : ""}</td></tr>`; }).join("")}
+          </tbody></table></div>` : `<div class="empty"><b>No advances yet</b>Recorded advances appear here with their outstanding balance.</div>`}
+        </div>
+      </div>`;
+  },
+
+  deductions() {
+    const list = [...state.deductions.map((x) => ({ ...x, type: "Deduction" })), ...state.extras.map((x) => ({ ...x, type: x.kind }))].sort((a, b) => b.date.localeCompare(a.date));
+    return `
+      <div class="head"><div><h1>Deductions & extras</h1><p class="sub">Deductions reduce salary; overtime and bonus add to it. All are applied in that month's payroll.</p></div></div>
+      <div class="grid2">
+        <div class="card"><div class="card-h"><h2>Add entry</h2></div><div class="pad">
+          <form class="form" id="dedForm">
+            <label class="f">Type<select name="type"><option>Deduction</option><option>Overtime</option><option>Bonus</option></select></label>
+            <label class="f">Employee${empSelect()}</label>
+            <div class="row2"><label class="f">Amount (₹)<input type="number" name="amount" min="1" step="0.01" required></label><label class="f">Date<input type="date" name="date" value="${today()}" required></label></div>
+            <label class="f">Category (deductions)<select name="category"><option>Damage/Loss</option><option>Salary deduction</option><option>Other</option></select></label>
+            <label class="f">Reason<input name="reason" required minlength="3"></label>
+            <button class="btn" type="submit">Save entry</button>
+          </form></div></div>
+        <div class="card"><div class="card-h"><h2>All entries</h2></div>
+          ${list.length ? `<div class="tbl"><table><thead><tr><th>Type</th><th>Employee</th><th>Date</th><th class="r">Amount</th><th>Reason</th><th></th></tr></thead><tbody>
+          ${list.map((x) => `<tr style="${x.void ? "opacity:.55" : ""}"><td><span class="badge ${x.type === "Deduction" ? "bad" : "ok"}">${x.type}</span></td><td><b>${esc(emp(x.empId)?.name)}</b></td><td>${fmtDate(x.date)}</td><td class="r num">${x.type === "Deduction" ? "− " : "+ "}${money(x.amount)}</td>
+            <td class="muted">${esc(x.void ? "Voided" : (x.category ? x.category + " · " : "") + x.reason)}</td>
+            <td class="r">${!x.void && !state.payrolls[x.date.slice(0, 7)] ? `<button class="btn ghost sm danger" data-act="dedVoid" data-id="${x.id}" data-type="${x.type}">Void</button>` : ""}</td></tr>`).join("")}
+          </tbody></table></div>` : `<div class="empty"><b>Nothing recorded</b>Deductions, overtime and bonuses appear here.</div>`}
+        </div>
+      </div>`;
+  },
+
+  data() {
+    const size = new Blob([JSON.stringify(state)]).size;
+    return `
+      <div class="head"><div><h1>Data & backup</h1><p class="sub">Records are saved automatically in this browser. Download a backup regularly — clearing browser data deletes local records.</p></div></div>
+      ${storageOk ? "" : `<div class="warnbox">This browser is blocking local storage, so changes are not being saved. Download a backup before closing the page.</div>`}
+      <div class="grid2">
+        <div class="card"><div class="card-h"><h2>Settings</h2></div><div class="pad">
+          <form class="form" id="setForm">
+            <label class="f">Business name<input name="business" value="${esc(state.settings.business)}" required></label>
+            <label class="f">Default salary method<select name="method">${Object.entries(METHODS).map(([k, v]) => `<option value="${k}" ${k === state.settings.method ? "selected" : ""}>${v}</option>`).join("")}</select></label>
+            <label class="check"><input type="checkbox" name="weeklyOffPaid" ${state.settings.weeklyOffPaid ? "checked" : ""}> Pay weekly offs (not on 26-day basis)</label>
+            <label class="check"><input type="checkbox" name="holidayPaid" ${state.settings.holidayPaid ? "checked" : ""}> Pay holidays</label>
+            <label class="check"><input type="checkbox" name="cap" ${state.settings.cap ? "checked" : ""}> Cap pay at monthly salary</label>
+            <button class="btn" type="submit">Save settings</button>
+          </form></div></div>
+        <div class="card"><div class="card-h"><h2>Backup and restore</h2><span class="muted small">${state.employees.length} employees · ${(size / 1024).toFixed(1)} KB</span></div><div class="pad form">
+          <button class="btn" data-act="backup">Download backup (.json)</button>
+          <label class="btn out" style="display:grid;place-items:center;cursor:pointer">Restore from backup<input type="file" id="restore" accept=".json,application/json" hidden></label>
+          <button class="btn out" data-act="attCsv">Export ${fmtMonth(ui.month)} attendance (CSV)</button>
+          <hr style="border:0;border-top:1px solid var(--line);margin:6px 0">
+          ${state.employees.some((e) => e.demo) ? `<button class="btn out" data-act="clearDemo">Remove demo records</button>` : ""}
+          <button class="btn out danger" data-act="reset">Erase all records</button>
+        </div></div>
+      </div>`;
+  },
+};
+
+function empSelect() {
+  const active = state.employees.filter((e) => e.status === "active");
+  if (!active.length) return `<select name="empId" required disabled><option value="">Add an employee first</option></select>`;
+  return `<select name="empId" required><option value="" disabled selected>Choose employee</option>${active.map((e) => `<option value="${e.id}">${esc(e.name)} (${e.code})</option>`).join("")}</select>`;
+}
+
+/* ============================================================
+   Dialogs
+   ============================================================ */
+const dlg = document.getElementById("dlg");
+function openDialog(title, body) {
+  dlg.innerHTML = `<div class="dlg-h"><h3>${title}</h3><button class="btn ghost" data-act="close" aria-label="Close">✕</button></div><div class="dlg-b">${body}</div>`;
+  dlg.showModal();
+}
+
+function slipBody(i, ym) {
+  const line = (l, d, a, neg) => `<tr><td>${l}<div class="small muted">${d}</div></td><td class="num">${neg ? "− " : ""}${money(a)}</td></tr>`;
+  const pd = paidOf(i);
+  return `
+    ${i.warnings.length ? `<div class="warnbox">${i.warnings.map(esc).join("<br>")}</div>` : ""}
+    <p class="small muted" style="margin:0 0 10px">${esc(i.code)} · ${esc(i.designation)} · ${fmtMonth(ym)} · ${METHODS[i.method]}</p>
+    <table class="calc"><tbody>
+      ${line("Daily rate", `${money(i.salary)} ÷ ${i.divisor}`, i.rate)}
+      ${line("Present", `${i.counts.present} days`, i.salary * i.counts.present / i.divisor)}
+      ${line("Half days", `${i.counts.half_day} × ${state.settings.halfDay}`, i.salary * i.counts.half_day * state.settings.halfDay / i.divisor)}
+      ${line("Paid leave", `${i.counts.paid_leave} days`, i.salary * i.counts.paid_leave / i.divisor)}
+      ${line("Weekly offs", `${i.counts.weekly_off} ${i.offPaid ? "paid" : "unpaid"}`, i.offPaid ? i.salary * i.counts.weekly_off / i.divisor : 0)}
+      ${line("Holidays", `${i.counts.holiday} days`, state.settings.holidayPaid ? i.salary * i.counts.holiday / i.divisor : 0)}
+      ${line("Gross earned", `${i.payable} payable days · absent ${i.counts.absent}, unpaid leave ${i.counts.unpaid_leave}`, i.gross)}
+      ${line("Overtime + bonus", "", i.overtime + i.bonus)}
+      ${line("Deductions", "", i.deductions, true)}
+      ${line("Advances recovered", "", i.advances, true)}
+      <tr class="tot"><td>Net salary</td><td class="num">${money(i.net)}</td></tr>
+    </tbody></table>
+    ${(i.payments || []).length ? `<p class="small" style="margin:14px 0 4px"><b>Payments</b></p>${i.payments.map((p) => `<div class="small">${fmtDate(p.date)} · ${esc(p.method)}${p.ref ? " · " + esc(p.ref) : ""} — <b class="num">${money(p.amount)}</b></div>`).join("")}<p class="small">Balance: <b>${money(i.net - pd)}</b></p>` : ""}
+    <div class="actions no-print" style="margin-top:16px"><button class="btn out" data-act="printSlip">Print salary slip</button></div>`;
+}
+
+function printSlip(i, ym) {
+  const w = window.open("", "_blank");
+  if (!w) { toast("Allow pop-ups to print the slip."); return; }
+  w.document.write(`<!DOCTYPE html><html><head><title>Salary slip ${esc(i.code)} ${ym}</title><style>
+    body{font-family:system-ui,sans-serif;color:#2F3A3E;margin:32px;max-width:640px} header{background:#E4EFE8;color:#2C5C43;border:1px solid #CFE0D6;padding:18px 22px;border-radius:10px}
+    h1{margin:0;font-size:22px} table{width:100%;border-collapse:collapse;margin-top:16px;font-size:14px} td{padding:7px 0;border-bottom:1px dashed #E2E6E3} td:last-child{text-align:right}
+    .tot td{border-top:2px solid #5B8A72;border-bottom:0;font-weight:700;font-size:17px} .muted{color:#6B767C;font-size:12px}</style></head><body>
+    <header><h1>${esc(state.settings.business)}</h1><div>Salary slip · ${fmtMonth(ym)}</div></header>
+    <p><b>${esc(i.name)}</b> (${esc(i.code)}) · ${esc(i.designation)}<br><span class="muted">Monthly salary ${money(i.salary)} · Daily ${money(i.rate)} (${METHODS[i.method]})</span></p>
+    <table><tr><td>Present / Half days / Paid leave</td><td>${i.counts.present} / ${i.counts.half_day} / ${i.counts.paid_leave}</td></tr>
+    <tr><td>Weekly offs / Holidays</td><td>${i.counts.weekly_off} / ${i.counts.holiday}</td></tr>
+    <tr><td>Absent / Unpaid leave / Not marked</td><td>${i.counts.absent} / ${i.counts.unpaid_leave} / ${i.counts.not_marked}</td></tr>
+    <tr><td>Payable days</td><td>${i.payable}</td></tr><tr><td>Gross salary</td><td>${money(i.gross)}</td></tr>
+    <tr><td>Overtime + bonus</td><td>${money(i.overtime + i.bonus)}</td></tr><tr><td>Less: advances</td><td>− ${money(i.advances)}</td></tr>
+    <tr><td>Less: deductions</td><td>− ${money(i.deductions)}</td></tr><tr class="tot"><td>Net salary</td><td>${money(i.net)}</td></tr>
+    <tr><td>Paid</td><td>${money(paidOf(i))}</td></tr></table>
+    <p class="muted">Generated ${fmtDate(today())}. Computer-generated slip.</p><script>print()<\/script></body></html>`);
+  w.document.close();
+}
+
+/* ============================================================
+   Events
+   ============================================================ */
+let slipCtx = null;
+
+document.addEventListener("click", (ev) => {
+  const t = ev.target.closest("[data-tab],[data-act]");
+  if (!t) return;
+  if (t.dataset.tab) return go(t.dataset.tab);
+  const a = t.dataset.act;
+
+  if (a === "close") return dlg.close();
+  if (a === "day") { ui.date = addDays(ui.date, Number(t.dataset.n)); return render(); }
+  if (a === "today") { ui.date = today(); return render(); }
+
+  if (a === "mark") {
+    const st = t.dataset.st, id = t.dataset.emp, d = ui.date;
+    if (d > today() && ["present", "absent", "half_day"].includes(st)) return toast("Can't mark present, absent or half day for a future date.");
+    state.attendance[d] = state.attendance[d] || {};
+    if (state.attendance[d][id] === st) delete state.attendance[d][id]; // tap again to clear
+    else state.attendance[d][id] = st;
+    save(); return render();
+  }
+  if (a === "bulk") {
+    const d = ui.date, day = (state.attendance[d] = state.attendance[d] || {});
+    const targets = state.employees.filter((e) => employedOn(e, d) && !day[e.id] && (t.dataset.only !== "off" || e.weeklyOff === weekday(d)));
+    if (!confirm(`Mark ${targets.length} unmarked employee(s) as ${STATUSES[t.dataset.st][0]} for ${fmtDate(d)}? Already-marked staff won't change.`)) return;
+    targets.forEach((e) => (day[e.id] = t.dataset.st));
+    save(); toast(`Marked ${targets.length} employee(s).`); return render();
+  }
+
+  if (a === "empEdit") {
+    const e = emp(t.dataset.id), f = document.getElementById("empForm");
+    ["id", "name", "designation", "mobile", "joining", "salary"].forEach((k) => (f.elements[k].value = e[k] ?? ""));
+    f.elements.method.value = e.method || ""; f.elements.weeklyOff.value = e.weeklyOff ?? "";
+    document.getElementById("empFormTitle").textContent = `Edit ${e.name}`;
+    return f.elements.name.focus();
+  }
+  if (a === "empReset") { document.getElementById("empFormTitle").textContent = "Add employee"; return; }
+  if (a === "empDeact") {
+    const e = emp(t.dataset.id);
+    const exit = prompt(`Last working day for ${e.name} (YYYY-MM-DD):`, today());
+    if (!exit || !/^\d{4}-\d{2}-\d{2}$/.test(exit)) return;
+    e.status = "inactive"; e.exit = exit; save(); toast(`${e.name} deactivated.`); return render();
+  }
+  if (a === "empReact") { const e = emp(t.dataset.id); e.status = "active"; e.exit = null; save(); return render(); }
+
+  if (a === "advVoid") {
+    const reason = prompt("Reason for voiding this advance:"); if (!reason) return;
+    const x = state.advances.find((y) => y.id === t.dataset.id); x.void = true; x.voidReason = reason; save(); return render();
+  }
+  if (a === "dedVoid") {
+    const list = t.dataset.type === "Deduction" ? state.deductions : state.extras;
+    if (!confirm("Void this entry? It stays in the list, marked as voided.")) return;
+    list.find((y) => y.id === t.dataset.id).void = true; save(); return render();
+  }
+
+  if (a === "finalize") {
+    const ym = ui.payMonth, p = payrollFor(ym);
+    const unmarked = p.items.reduce((s, i) => s + i.counts.not_marked, 0);
+    if (!confirm(`Finalize ${fmtMonth(ym)}?${unmarked ? `\n\n${unmarked} day(s) are not marked and won't be paid.` : ""}\n\nSalaries are locked and advances are recovered.`)) return;
+    state.payrolls[ym] = { at: new Date().toISOString(), items: Object.fromEntries(p.items.map((i) => [i.empId, i])), recoveries: p.items.flatMap((i) => i.recoveries) };
+    save(); toast(`${fmtMonth(ym)} finalized.`); return render();
+  }
+  if (a === "unlock") {
+    const p = state.payrolls[ui.payMonth];
+    if (Object.values(p.items).some((i) => paidOf(i) > 0)) return toast("Payments exist for this month. Adjust next month with a bonus or deduction instead.");
+    if (!confirm("Unlock this month? It returns to a live draft and advance recoveries are undone.")) return;
+    delete state.payrolls[ui.payMonth]; save(); return render();
+  }
+  if (a === "slip") {
+    const ym = ui.payMonth, i = payrollFor(ym).items.find((x) => x.empId === t.dataset.emp);
+    slipCtx = { i, ym }; return openDialog(`${esc(i.name)} — calculation`, slipBody(i, ym));
+  }
+  if (a === "printSlip") return printSlip(slipCtx.i, slipCtx.ym);
+  if (a === "pay") {
+    const i = state.payrolls[ui.payMonth].items[t.dataset.emp], bal = r2(i.net - paidOf(i));
+    slipCtx = { i, ym: ui.payMonth };
+    return openDialog(`Pay ${esc(i.name)}`, `<form class="form" id="payForm" data-emp="${i.empId}">
+      <p class="small muted" style="margin:0">Net ${money(i.net)} · Paid ${money(paidOf(i))} · <b>Balance ${money(bal)}</b></p>
+      <div class="row2"><label class="f">Amount (₹)<input type="number" name="amount" min="0.01" max="${bal}" step="0.01" value="${bal}" required></label>
+      <label class="f">Date<input type="date" name="date" value="${today()}" max="${today()}" required></label></div>
+      <div class="row2"><label class="f">Method<select name="method"><option>UPI</option><option>Cash</option><option>Bank transfer</option><option>Cheque</option></select></label>
+      <label class="f">Reference<input name="ref" placeholder="UPI ref / cheque no."></label></div>
+      <button class="btn" type="submit">Record payment</button></form>`);
+  }
+  if (a === "payCsv") {
+    const ym = ui.payMonth, items = payrollFor(ym).items;
+    const rows = [["ID", "Employee", "Designation", "Monthly salary", "Method", "Present", "Absent", "Half day", "Paid leave", "Unpaid leave", "Weekly off", "Holiday", "Not marked", "Payable days", "Gross", "Overtime", "Bonus", "Advances", "Deductions", "Net", "Paid"],
+      ...items.map((i) => [i.code, i.name, i.designation, i.salary, METHODS[i.method], i.counts.present, i.counts.absent, i.counts.half_day, i.counts.paid_leave, i.counts.unpaid_leave, i.counts.weekly_off, i.counts.holiday, i.counts.not_marked, i.payable, i.gross, i.overtime, i.bonus, i.advances, i.deductions, i.net, paidOf(i)])];
+    return download(`payroll-${ym}.csv`, "\uFEFF" + rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n"), "text/csv");
+  }
+
+  if (a === "backup") { download(`benne-tindi-backup-${today()}.json`, JSON.stringify(state, null, 2), "application/json"); return toast("Backup downloaded."); }
+  if (a === "attCsv") {
+    const ym = ui.month, days = daysIn(ym);
+    const header = ["Employee", ...Array.from({ length: days }, (_, k) => k + 1)];
+    const rows = state.employees.map((e) => [e.name, ...Array.from({ length: days }, (_, k) => { const d = `${ym}-${String(k + 1).padStart(2, "0")}`; return employedOn(e, d) ? (STATUSES[state.attendance[d]?.[e.id]]?.[1] ?? "-") : ""; })]);
+    return download(`attendance-${ym}.csv`, "\uFEFF" + [header, ...rows].map((r) => r.join(",")).join("\n"), "text/csv");
+  }
+  if (a === "clearDemo") {
+    if (!confirm("Remove the demo employees and all their attendance, advances and payroll?")) return;
+    const demo = new Set(state.employees.filter((e) => e.demo).map((e) => e.id));
+    state.employees = state.employees.filter((e) => !demo.has(e.id));
+    Object.values(state.attendance).forEach((day) => demo.forEach((id) => delete day[id]));
+    ["advances", "deductions", "extras"].forEach((k) => (state[k] = state[k].filter((x) => !demo.has(x.empId))));
+    Object.values(state.payrolls).forEach((p) => demo.forEach((id) => delete p.items[id]));
+    save(); toast("Demo records removed."); return render();
+  }
+  if (a === "reset") {
+    if (prompt('This deletes every record in this browser. Type ERASE to confirm.') !== "ERASE") return;
+    state = blankState(); save(); renderTabs(); toast("All records erased."); return render();
+  }
+});
+
+document.addEventListener("change", (ev) => {
+  const t = ev.target;
+  if (t.id === "attDate" && t.value) { ui.date = t.value; render(); }
+  if (t.id === "payMonth" && t.value) { ui.payMonth = t.value; ui.month = t.value; render(); }
+  if (t.id === "showInactive") { ui.showInactive = t.checked; render(); }
+  if (t.id === "restore" && t.files[0]) {
+    const r = new FileReader();
+    r.onload = () => {
+      try {
+        const data = JSON.parse(r.result);
+        if (!Array.isArray(data.employees) || typeof data.attendance !== "object") throw new Error();
+        if (!confirm(`Replace current records with this backup (${data.employees.length} employees)?`)) return;
+        state = Object.assign(blankState(), data); save(); renderTabs(); render(); toast("Backup restored.");
+      } catch { toast("That file isn't a valid backup."); }
+    };
+    r.readAsText(t.files[0]);
+  }
+});
+
+document.addEventListener("input", (ev) => {
+  if (ev.target.id === "attSearch") {
+    ui.q = ev.target.value; const pos = ev.target.selectionStart; render();
+    const s = document.getElementById("attSearch"); s.focus(); s.setSelectionRange(pos, pos);
+  }
+});
+
+document.addEventListener("submit", (ev) => {
+  ev.preventDefault();
+  const f = ev.target, v = Object.fromEntries(new FormData(f)), fid = f.getAttribute("id"); // a field named "id" shadows f.id
+  if (fid === "empForm") {
+    const data = { name: v.name.trim(), designation: v.designation.trim(), mobile: v.mobile, joining: v.joining, salary: r2(Number(v.salary)), method: v.method || null, weeklyOff: v.weeklyOff === "" ? null : Number(v.weeklyOff) };
+    if (v.id) { Object.assign(emp(v.id), data); toast("Employee updated."); }
+    else { state.seq++; state.employees.push({ id: "e" + state.seq + uid(), code: "BT-" + String(state.seq).padStart(4, "0"), status: "active", exit: null, demo: false, ...data }); toast(`${data.name} added.`); }
+    save(); return render();
+  }
+  if (fid === "advForm") {
+    state.advances.push({ id: uid(), empId: v.empId, date: v.date, amount: r2(Number(v.amount)), method: v.method, note: v.note, void: false });
+    save(); toast("Advance recorded."); return render();
+  }
+  if (fid === "dedForm") {
+    if (state.payrolls[v.date.slice(0, 7)]) return toast("That month is finalized. Use next month or unlock it first.");
+    const rec = { id: uid(), empId: v.empId, date: v.date, amount: r2(Number(v.amount)), reason: v.reason, void: false };
+    if (v.type === "Deduction") state.deductions.push({ ...rec, category: v.category });
+    else state.extras.push({ ...rec, kind: v.type });
+    save(); toast(`${v.type} saved.`); return render();
+  }
+  if (fid === "payForm") {
+    const i = state.payrolls[ui.payMonth].items[f.dataset.emp], amt = r2(Number(v.amount)), bal = r2(i.net - paidOf(i));
+    if (!(amt > 0) || amt > bal) return toast(`Enter an amount up to ${money(bal)}.`);
+    if (v.ref && (i.payments || []).some((p) => p.ref && p.ref.toLowerCase() === v.ref.toLowerCase())) return toast("A payment with this reference already exists.");
+    (i.payments = i.payments || []).push({ amount: amt, date: v.date, method: v.method, ref: v.ref.trim() });
+    save(); dlg.close(); toast(amt >= bal ? "Fully paid." : "Partial payment recorded."); return render();
+  }
+  if (fid === "setForm") {
+    Object.assign(state.settings, { business: v.business.trim(), method: v.method, weeklyOffPaid: !!v.weeklyOffPaid, holidayPaid: !!v.holidayPaid, cap: !!v.cap });
+    save(); renderTabs(); toast("Settings saved."); return render();
+  }
+});
+
+/* Light / dark mode — remembered separately from your records */
+const THEME_KEY = "benne-tindi-theme";
+function isDark() {
+  const t = document.documentElement.dataset.theme;
+  return t ? t === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+function syncThemeUI() {
+  const dark = isDark();
+  document.getElementById("themeBtn").setAttribute("aria-checked", String(dark));
+  document.getElementById("themeIcon").textContent = dark ? "☾" : "☀";
+  document.getElementById("themeBtnTop").textContent = dark ? "☀" : "☾";
+  document.querySelector('meta[name="color-scheme"]')?.setAttribute("content", dark ? "dark" : "light");
+}
+function toggleTheme() {
+  const next = isDark() ? "light" : "dark";
+  document.documentElement.dataset.theme = next;
+  try { localStorage.setItem(THEME_KEY, next); } catch (e) {}
+  syncThemeUI();
+  toast(next === "dark" ? "Dark mode on" : "Light mode on");
+}
+document.getElementById("themeBtn").addEventListener("click", toggleTheme);
+document.getElementById("themeBtnTop").addEventListener("click", toggleTheme);
+window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", syncThemeUI);
+syncThemeUI();
+
+document.getElementById("menuBtn").addEventListener("click", () => document.getElementById("side").classList.toggle("open"));
+window.addEventListener("storage", (e) => { if (e.key === KEY) { load(); renderTabs(); render(); } }); // keep multiple tabs in sync
+
+load(); renderTabs(); render();
+</script>
+</body>
+</html>
